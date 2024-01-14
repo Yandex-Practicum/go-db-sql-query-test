@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"errors"
 	"fmt"
+	"log"
 	"os"
 	"testing"
 
@@ -20,7 +21,7 @@ func TestMain(m *testing.M) {
 	fmt.Println("Setting up database...")
 	db, err := OpenDb()
 	if err != nil {
-		fmt.Println(err)
+		log.Fatal(err)
 	}
 	mainDB.db = db
 	fmt.Println("Let's test some tests...")
@@ -44,8 +45,11 @@ func Test_SelectClient_WhenOk(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
+	if client.ID == 0 {
+		t.Error("empty client ID")
+	}
 	if client.ID != clientID {
-		t.Fatalf("client id wrong, want: %d, got: %d", clientID, client.ID)
+		t.Errorf("client id wrong, want: %d, got: %d", clientID, client.ID)
 	}
 	if client.FIO == "" {
 		t.Error("empty fio")
@@ -71,21 +75,21 @@ func Test_SelectClient_WhenNoClient(t *testing.T) {
 		t.Fatal(err)
 	}
 	if client.ID != 0 {
-		t.Fatalf("client id wrong, want: 0, got: %d", client.ID)
+		t.Errorf("client id wrong, want: 0, got: %d", client.ID)
 	}
 	if client.FIO != "" {
-		t.Fatalf("client fio wrong, want: , got: %s", client.FIO)
+		t.Errorf("client fio wrong, want: , got: %s", client.FIO)
 	}
 	if client.Login != "" {
-		t.Fatalf("client login wrong, want: , got: %s", client.Login)
+		t.Errorf("client login wrong, want: , got: %s", client.Login)
 	}
 
 	if client.Birthday != "" {
-		t.Fatalf("client birthday wrong, want: , got: %s", client.Birthday)
+		t.Errorf("client birthday wrong, want: , got: %s", client.Birthday)
 	}
 
 	if client.Email != "" {
-		t.Fatalf("client email wrong, want: , got: %s", client.Email)
+		t.Errorf("client email wrong, want: , got: %s", client.Email)
 	}
 }
 
